@@ -4,24 +4,38 @@ import { storeToRefs } from 'pinia'
 
 const searchStore = useSearchStore()
 const { history } = storeToRefs(searchStore)
+
 </script>
 
 <template>
-  <section class="history" v-if="history.length">
+  <section v-if="history.length" class="history">
     <h3>検索履歴</h3>
     <div class="history-grid">
       <div
-        v-for="(item, index) in history.slice(0, 9)"
-        :key="item.zipcode + index"
+        v-for="(record, i) in history.slice(0, 9)"
+        :key="record.zipcode + i"
         class="history-card"
       >
-        <p>郵便番号: {{ item.zipcode }}</p>
-        <p>住所: {{ item.address1 }}{{ item.address2 }}{{ item.address3 }}</p>
-        <p>カナ: {{ item.kana1 }}{{ item.kana2 }}{{ item.kana3 }}</p>
+        <p class="history-card__zipcode">郵便番号: {{ record.zipcode }}</p>
+        <hr class="history-card__divider" />
+
+        <div
+          v-for="(item, j) in record.results"
+          :key="item.address1 + item.address2 + j"
+          class="history-card__match"
+        >
+          <p>住所: {{ item.address1 }}{{ item.address2 }}{{ item.address3 }}</p>
+          <p>カナ: {{ item.kana1 }}{{ item.kana2 }}{{ item.kana3 }}</p>
+          <hr
+            v-if="j < record.results.length - 1"
+            class="history-card__divider"
+          />
+        </div>
       </div>
     </div>
   </section>
 </template>
+
 
 <style scoped lang="scss">
 @use '../assets/styles/variables' as vars;
@@ -42,6 +56,7 @@ const { history } = storeToRefs(searchStore)
     display: grid;
     grid-template-columns: 1fr; 
     gap: vars.$gap-size-l;
+    width: 100%;
 
     @include vars.above(vars.$breakpoint-md) {
       grid-template-columns: repeat(3, 1fr);
