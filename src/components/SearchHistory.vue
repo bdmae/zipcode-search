@@ -54,6 +54,7 @@ const { history } = storeToRefs(searchStore)
     display: grid;
     grid-template-columns: 1fr;
     gap: vars.$gap-size-l;
+    margin-bottom: 2rem;
 
     @include vars.above(vars.$breakpoint-md) {
       grid-template-columns: repeat(3, 1fr);
