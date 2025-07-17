@@ -41,22 +41,19 @@ const { history } = storeToRefs(searchStore)
 @use '../assets/styles/variables' as vars;
 
 .history {
+  /* keep the section from growing forever */
+  max-height: 40vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  h3 {
-    font-size: 1.2rem;
-    margin-bottom: vars.$padding-card;
-    text-align: center;
-    color: vars.$color-text-primary;
-  }
+  width: 100%;
 
   .history-grid {
+    /* let the grid fill the remaining space and scroll if it overflows */
+    flex: 1 1 auto;
+    overflow-y: auto;
     display: grid;
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
     gap: vars.$gap-size-l;
-    width: 100%;
 
     @include vars.above(vars.$breakpoint-md) {
       grid-template-columns: repeat(3, 1fr);
