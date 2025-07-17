@@ -8,7 +8,7 @@ export const useSearchStore = defineStore('zipcode', () => {
     const responseError = ref<ResponseError | null>(null)
     const isLoading = ref(false)
     const history = ref<ZipcodeResult[]>([])
-
+    const typedZipcode = ref('')
 
     function addToHistory(result: ZipcodeResult) {
         // is there already an entry with the same zipcode?
@@ -18,8 +18,8 @@ export const useSearchStore = defineStore('zipcode', () => {
     }
 
     // Fetch zipcode data from the API
-
     async function fetchZipcodeData(zipcode: string) {
+        typedZipcode.value = zipcode
         isLoading.value = true
         responseError.value = null
 
@@ -34,9 +34,11 @@ export const useSearchStore = defineStore('zipcode', () => {
                 return
             }
 
+
+            // add results
             results.value = data.results
 
-            // Add the first result to history
+            // add first result to history
             addToHistory(data.results[0])
         } catch (err) {
             console.error('Network error:', err)
@@ -50,6 +52,8 @@ export const useSearchStore = defineStore('zipcode', () => {
 
     return {
         results,
+        typedZipcode,
+        addToHistory,
         responseError,
         isLoading,
         history,

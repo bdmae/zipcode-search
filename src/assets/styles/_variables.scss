@@ -1,7 +1,71 @@
 // keep colours, break‑point, etc. in one place
 $primary: #2563eb;     // bright-ish blue
-$danger:  #dc2626;     // red for validation + errors
+$danger:  red;     // red for validation + errors
 $gray-100: #f3f4f6;
 $gray-700: #374151;
 
-$bp-md: 768px;
+// Breakpoints
+$breakpoint-sm:       640px;   // small screens / large phones
+$breakpoint-md:       768px;   // tablets
+$breakpoint-lg:       1024px;  // small desktops
+$breakpoint-xl:       1280px;  // large desktops
+
+// Optional mixins for convenience:
+@mixin above($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+@mixin below($breakpoint) {
+  @media (max-width: $breakpoint) {
+    @content;
+  }
+}
+
+
+// ────────────────────────────────────────
+// Colors
+$color-card-bg:           #fff;
+$color-card-border:       #e0e0e0;
+$color-text-primary:      #333;
+$color-text-secondary:    #666;
+$color-error:             $danger;
+$color-disabled:          #ccc;
+$color-primary:           $primary;
+
+// Spacing
+$padding-card:            1rem;
+$padding-form:            1.5rem;
+$margin-card-vertical:    1rem;
+$margin-header-bottom:    0.75rem;
+$padding-header-bottom:   0.5rem;
+$padding-item-vertical:   0.75rem;
+$padding-input:           1.2rem;
+
+// Border & radius
+$border-radius-card:      8px;
+$border-radius-input:     6px;
+$border-radius:           4px;
+
+// Grid gaps
+$grid-row-gap:            0.25rem;
+$grid-column-gap:         0.5rem;
+$gap-size-l:                8px;
+
+// Typography
+$font-size-item-label:    0.9rem;
+$font-size-item-value:    0.95rem;
+$line-height-item:        1.4;
+$font-size-base:          1rem;
+$font-size-l:             1.2rem;
+$font-size-small:         0.875rem;
+
+// widths
+$max-form-width:   600px;
+$button-width:     30%;
+
+// height
+$input-height:     4rem;
+
+
+

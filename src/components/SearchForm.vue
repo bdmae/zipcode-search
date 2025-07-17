@@ -2,7 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import { validateZipcode } from '../utils/validateZipcode';
 import type { ZipError } from '../types/errors';
-import { validationMessages } from '../types/errors'
+import { validationErrorMessages } from '../types/errors';
 
 const zipcode = ref('')
 const validationError = ref<ZipError | null>(null)
@@ -12,34 +12,35 @@ const emit = defineEmits<{
   (event: 'search', zipcode: string): void
 }>()
 
-function handleSubmit() {
-  if (!isValid.value) return
+const hasInput = computed(() => zipcode.value.trim().length > 0)
+
+function handleSubmit(): void {
+  if (!hasInput) return
+
+  const error = validateZipcode(zipcode.value)
+  validationError.value = error
+  if (error) return
+
   emit('search', zipcode.value)
 }
 
-// Live validation
 watch(zipcode, (value) => {
   if (!value) {
     validationError.value = null
-    isValid.value = false
     return
   }
-
-  const error = validateZipcode(value)
-  validationError.value = error
-  isValid.value = !error
+  validationError.value = validateZipcode(value)
 })
 
-// Computed error message (optional, for cleaner template)
 const errorMessage = computed(() => {
-  return validationError.value ? validationMessages[validationError.value] : ''
+  return validationError.value ? validationErrorMessages[validationError.value] : ''
 })
+
 </script>
 
 <template>
   <form @submit.prevent="handleSubmit" class="search-form">
     <div class="postcode-input-area">
-      <label for="zipcode">Postal Code</label>
       <input
         id="zipcode"
         v-model="zipcode"
@@ -47,90 +48,87 @@ const errorMessage = computed(() => {
         maxlength="8"
         autocomplete="postal-code"
       />
+      <button type="submit" :disabled="!hasInput">
+        検索
+      </button>
     </div>
-
-    <button type="submit" :disabled="!isValid">
-      検索
-    </button>
-
-    <p v-if="errorMessage" class="search-form__error-message">
-      {{ errorMessage }}
-    </p>
+    <div class="error-message-container">
+      <p v-if="errorMessage" class="search-form__error-message">
+        {{ errorMessage }}
+      </p>
+    </div>
   </form>
 </template>
 
 
 <style scoped lang="scss">
-@use '../assets/styles/variables' as *;
+@use '../assets/styles/variables' as vars;
 
 .search-form {
-  max-width: 400px;
-  margin: 3rem auto;
-  padding: 2rem;
-  text-align: center;
-  font-family: sans-serif;
-  border-radius: 8px;
-  background-color: #fff;
-
-  &__error-message {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    font-size: 12px;
-    color: red;
-    margin-top: 4px;
-    white-space: nowrap;
-    min-height: 16px;
-  }
-}
-
-.form-title {
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-  }
-}
-
-.subtext {
-  font-size: 0.85rem;
-  color: #555;
-  margin-top: 0.5rem;
-}
-
-.input-wrapper {
-  margin: 1.5rem 0;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-input {
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  outline: none;
-
-  &:focus {
-    border-color: #409eff;
-  }
-}
-
-button {
   width: 100%;
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  background-color: #ccc;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: not-allowed;
-  transition: background-color 0.3s ease;
+  padding: vars.$padding-form;
+  text-align: left;
+  font-family: sans-serif;
 
-  &.valid {
-    background-color: #409eff;
-    cursor: pointer;
+  @media (min-width: 640px) {
+    max-width: vars.$max-form-width;
+  }
+
+  .postcode-input-area {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+    gap: vars.$gap-size-l;
+    height: 4rem;
+
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      font-size: vars.$font-size-item-label;
+    }
+
+    input {
+      padding: vars.$padding-input;
+      font-size: vars.$font-size-base;
+      border-radius: vars.$border-radius-input;
+      border: 1px solid vars.$color-disabled;
+      outline: none;
+      width: 100%;
+
+      &:focus {
+        border-color: vars.$color-primary;
+      }
+    }
+  }
+
+  .error-message-container {
+    margin-top: 0.5rem;
+    height: 4rem;    
+  }
+
+  .search-form__error-message {
+    text-align: center;
+    font-size: vars.$font-size-small;
+    color: vars.$color-error;
+  }
+
+  button {
+    width: vars.$button-width;
+    padding: vars.$padding-input;
+    font-size: vars.$font-size-l;
+    border: none;
+    border-radius: vars.$border-radius;
+    color: #fff;
+    transition: background-color 0.3s ease, cursor 0.3s ease;
+
+    &:disabled {
+      background-color: vars.$color-disabled;
+      cursor: not-allowed;
+    }
+    &:not(:disabled) {
+      background-color: vars.$color-primary;
+      cursor: pointer;
+    }
   }
 }
-
 </style>

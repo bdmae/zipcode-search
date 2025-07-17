@@ -1,20 +1,20 @@
-<!-- components/SearchHistory.vue -->
-
 <script setup lang="ts">
-import { useSearchStore } from '../stores/searchStore';
-import { storeToRefs } from 'pinia';
+import { useSearchStore } from '../stores/searchStore'
+import { storeToRefs } from 'pinia'
 
 const searchStore = useSearchStore()
 const { history } = storeToRefs(searchStore)
-
 </script>
 
-
 <template>
-  <section class="history">
+  <section class="history" v-if="history.length">
     <h3>検索履歴</h3>
     <div class="history-grid">
-      <div v-for="(item, index) in history" :key="index" class="history-card">
+      <div
+        v-for="(item, index) in history.slice(0, 9)"
+        :key="item.zipcode + index"
+        class="history-card"
+      >
         <p>郵便番号: {{ item.zipcode }}</p>
         <p>住所: {{ item.address1 }}{{ item.address2 }}{{ item.address3 }}</p>
         <p>カナ: {{ item.kana1 }}{{ item.kana2 }}{{ item.kana3 }}</p>
@@ -24,28 +24,44 @@ const { history } = storeToRefs(searchStore)
 </template>
 
 <style scoped lang="scss">
+@use '../assets/styles/variables' as vars;
+
 .history {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   h3 {
     font-size: 1.2rem;
-    margin-bottom: 1rem;
+    margin-bottom: vars.$padding-card;
     text-align: center;
+    color: vars.$color-text-primary;
   }
 
   .history-grid {
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: 1fr; 
+    gap: vars.$gap-size-l;
+
+    @include vars.above(vars.$breakpoint-md) {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
   .history-card {
-    background-color: #f7f7f7;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 1rem;
+    width: 100%;                              
+    background-color: vars.$color-card-bg;
+    border: 1px solid vars.$color-card-border;
+    border-radius: vars.$border-radius-card;
+    padding: vars.$padding-card;
+    box-sizing: border-box;
 
     p {
       margin: 0.25rem 0;
+      color: vars.$color-text-primary;
+      font-size: vars.$font-size-base;
     }
   }
 }
 </style>
+
