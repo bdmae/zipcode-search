@@ -5,10 +5,7 @@ $gray-100: #f3f4f6;
 $gray-700: #374151;
 
 // Breakpoints
-$breakpoint-sm:       640px;   // small screens / large phones
-$breakpoint-md:       768px;   // tablets
-$breakpoint-lg:       1024px;  // small desktops
-$breakpoint-xl:       1280px;  // large desktops
+$breakpoint:       768px;   // tablets
 
 // Optional mixins for convenience:
 @mixin above($breakpoint) {
@@ -38,6 +35,7 @@ $padding-card:            1rem;
 $padding-form:            1.5rem;
 $margin-card-vertical:    1rem;
 $margin-header-bottom:    0.75rem;
+$margin-size-m:           1rem;
 $padding-header-bottom:   0.5rem;
 $padding-item-vertical:   0.75rem;
 $padding-input:           1.2rem;
@@ -57,10 +55,11 @@ $font-size-item-label:    0.9rem;
 $font-size-item-value:    0.95rem;
 $line-height-item:        1.4;
 $font-size-base:          1rem;
-$font-size-l:             1.2rem;
+$font-size-lg:            1.2rem;
 $font-size-small:         0.875rem;
 
 // widths
+$max-width:        800px; // max width for main content
 $max-form-width:   600px;
 $button-width:     30%;
 

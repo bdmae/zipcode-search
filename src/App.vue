@@ -21,7 +21,7 @@ function onSearch(zipcode: string) {
         <p class="explanation-content">
             郵便番号を入力して住所を検索できます。
             郵便番号はハイフン「-」有無どちらでも検索可能です。
-           （000-0000、0000000 の形式で入力してください。）
+          （00-0000、0000000 の形式で入力してください。）
         </p>
       </div>
       <SearchForm @search="onSearch"/>
@@ -39,7 +39,8 @@ function onSearch(zipcode: string) {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding: 2rem 1rem;
 
   .content-wrapper {
     display: flex;
@@ -47,9 +48,9 @@ function onSearch(zipcode: string) {
     align-items: center;
 
     // tablet and up
-    @include vars.above(vars.$breakpoint-sm) {
-      max-width: vars.$max-form-width;
+    @include vars.above(vars.$breakpoint) {
       width: 100%;
+      max-width: vars.$max-width;
     }
 
     .explanation-content {

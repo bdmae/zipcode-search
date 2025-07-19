@@ -6,7 +6,6 @@ import { validationErrorMessages } from '../types/errors';
 
 const zipcode = ref('')
 const validationError = ref<ZipError | null>(null)
-const isValid = ref(false)
 
 const emit = defineEmits<{
   (event: 'search', zipcode: string): void
@@ -70,9 +69,9 @@ const errorMessage = computed(() => {
   text-align: left;
   font-family: sans-serif;
 
-  @media (min-width: 640px) {
-    max-width: vars.$max-form-width;
-  }
+  @include vars.above(vars.$breakpoint) {
+      width: 80%;
+    }
 
   .postcode-input-area {
     display: flex;
@@ -115,7 +114,7 @@ const errorMessage = computed(() => {
   button {
     width: vars.$button-width;
     padding: vars.$padding-input;
-    font-size: vars.$font-size-l;
+    font-size: vars.$font-size-lg;
     border: none;
     border-radius: vars.$border-radius;
     color: #fff;
