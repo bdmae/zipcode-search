@@ -3,7 +3,6 @@ import SearchForm from './components/SearchForm.vue'
 import SearchHistory from './components/SearchHistory.vue';
 import SearchResult from './components/SearchResult.vue';
 import { useSearchStore } from './stores/searchStore';
-import { storeToRefs } from 'pinia';
 
 const store = useSearchStore()
 
@@ -21,6 +20,8 @@ function onSearch(zipcode: string) {
         <p class="explanation-content">
             郵便番号を入力して住所を検索できます。
             郵便番号はハイフン「-」有無どちらでも検索可能です。
+        </p>
+        <p class="explanation-content">
           （00-0000、0000000 の形式で入力してください。）
         </p>
       </div>

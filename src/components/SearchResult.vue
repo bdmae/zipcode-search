@@ -7,32 +7,6 @@ const store = useSearchStore()
 // pull in the reactive refs you actually have on the store
 const { results, typedZipcode } = storeToRefs(store)
 
-const mockRecord = {
-  zipcode: "0790177",
-  results: [
-    {
-      zipcode: "0790177",
-      prefcode: "1",
-      address1: "北海道",
-      address2: "美唄市",
-      address3: "上美唄町協和",
-      kana1: "ﾎｯｶｲﾄﾞｳ",
-      kana2: "ﾋﾞﾊﾞｲｼ",
-      kana3: "ｶﾐﾋﾞﾊﾞｲﾁｮｳｷｮｳﾜ"
-    },
-    {
-      zipcode: "0790177",
-      prefcode: "1",
-      address1: "北海道",
-      address2: "美唄市",
-      address3: "上美唄町南",
-      kana1: "ﾎｯｶｲﾄﾞｳ",
-      kana2: "ﾋﾞﾊﾞｲｼ",
-      kana3: "ｶﾐﾋﾞﾊﾞｲﾁｮｳﾐﾅﾐ"
-    }
-  ]
-}
-
 </script>
 
 <template>
@@ -43,7 +17,7 @@ const mockRecord = {
     </div>
     <ul class="search-result__list">
       <li
-        v-for="item in mockRecord.results"
+        v-for="item in results"
         :key="item.address1 + item.address2 + item.address3"
         class="search-result__item"
       >
