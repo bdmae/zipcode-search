@@ -35,19 +35,22 @@ const errorMessage = computed(() => {
   return validationError.value ? validationErrorMessages[validationError.value] : ''
 })
 
+const isInvalid = computed(() => !!errorMessage.value)
+
 </script>
 
 <template>
   <form @submit.prevent="handleSubmit" class="search-form">
-    <div class="postcode-input-area">
+    <div class="zipcode-input-area">
       <input
         id="zipcode"
         v-model="zipcode"
         placeholder="郵便番号を入力してください"
         maxlength="8"
         autocomplete="postal-code"
+        :class="{ 'is-invalid': isInvalid }"
       />
-      <button type="submit" :disabled="!hasInput">
+      <button type="submit" :disabled="!hasInput || isInvalid">
         検索
       </button>
     </div>
@@ -69,11 +72,9 @@ const errorMessage = computed(() => {
   text-align: left;
   font-family: sans-serif;
 
-  @include vars.above(vars.$breakpoint) {
-      width: 80%;
-    }
+  @include vars.above(vars.$breakpoint) { width: 80%;}
 
-  .postcode-input-area {
+  .zipcode-input-area {
     display: flex;
     justify-content: space-around;
     margin-bottom: 1rem;
@@ -94,8 +95,13 @@ const errorMessage = computed(() => {
       outline: none;
       width: 100%;
 
+      &.is-invalid {
+        border-color: vars.$color-error;
+      }
+
       &:focus {
         border-color: vars.$color-primary;
+        border-width: 2px;
       }
     }
   }
@@ -105,10 +111,12 @@ const errorMessage = computed(() => {
     height: 4rem;    
   }
 
-  .search-form__error-message {
-    text-align: center;
-    font-size: vars.$font-size-small;
-    color: vars.$color-error;
+  .search-form {
+    &__error-message {
+      text-align: center;
+      font-size: vars.$font-size-small;
+      color: vars.$color-error;
+    }
   }
 
   button {

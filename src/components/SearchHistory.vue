@@ -1,31 +1,56 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useSearchStore } from '../stores/searchStore'
 import { storeToRefs } from 'pinia'
+import 'vue3-carousel/carousel.css'
+import { Carousel, Slide, Navigation } from 'vue3-carousel'
 
 const searchStore = useSearchStore()
 const { history } = storeToRefs(searchStore)
 
+const showNavigationButtons = computed(() => history.value.length > 3)
+
+const config = {
+  itemsToShow: 1,
+  gap: 10,
+  snapAlign: 'start',
+  breakpointMode: 'carousel',
+  wrapAround: false,
+  breakpoints: {
+    768: {
+      itemsToShow: 3,
+      snapAlign: 'start',
+    },
+  },
+} as const
+
 </script>
 
 <template>
-  <section v-if="history.length" class="history">
-    <h3 class="history-title">検索履歴</h3>
-    <div class="history-grid">
-      <div
-        v-for="(record, index) in history.slice(0, 9)"
-        :key="record.zipcode + index"
-        class="history-card"
-      >
-        <p class="history-card__zipcode">郵便番号: {{ record.zipcode }}</p>
-        <div
-          v-for="(item, index) in record.results"
-          :key="item.address1 + item.address2 + index"
-          :class="['history-card__match', { 'history-card__divider': index < record.results.length - 1 }]"
-        >
-          <p><span>住所:</span> {{ item.address1 }}{{ item.address2 }}{{ item.address3 }}</p>
-          <p><span>カナ:</span> {{ item.kana1 }}{{ item.kana2 }}{{ item.kana3 }}</p>
-        </div>
-      </div>
+  <section v-if="history.length" class="history-section">
+    <h3 class="history-section__title">検索履歴</h3>
+    <div class="carousel__wrapper">
+      <Carousel v-bind="config">
+        <Slide v-for="(record, index) in history" :key="record.zipcode + index" class="slide" v-memo="[record]">
+          <div class="slide__history-card">
+            <p class="zipcode">郵便番号: {{ record.zipcode }}</p>
+
+            <div
+              v-for="(item, i) in record.results"
+              :key="i"
+              class="address-block"
+              :class="{ 'divider': i < record.results.length - 1 }"
+            >
+              <p><span>住所:</span> {{ item.address1 }}{{ item.address2 }}{{ item.address3 }}</p>
+              <p><span>カナ:</span> {{ item.kana1 }} {{ item.kana2 }} {{ item.kana3 }}</p>
+            </div>
+          </div>
+        </Slide>
+
+        <template #addons v-if="showNavigationButtons">
+          <Navigation />
+        </template>
+      </Carousel>
     </div>
   </section>
 </template>
@@ -33,55 +58,53 @@ const { history } = storeToRefs(searchStore)
 <style scoped lang="scss">
 @use '../assets/styles/variables' as vars;
 
-.history {
-  max-height: 40vh;
-  display: flex;
-  flex-direction: column;
+.history-section {
   width: 100%;
 
-  .history-title {
-    font-size: vars.$font-size-lg;
+  &__title {
+    font-size: 1.25rem;
     font-weight: 600;
-    margin-bottom: vars.$margin-size-m;
+    margin-bottom: vars.$margin-header-bottom;
+    color: vars.$color-text-primary;
     text-align: center;
   }
+}
 
-  .history-grid {
-    flex: 1 1 auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: vars.$gap-size-l;
-    padding-bottom: 2rem;
+.slide {
+  background-color: white;
+  border-radius: 12px;
+  height: 100%;
+  width: 100%;
+  max-width: 320px;
+  border: 1px solid vars.$color-card-border;
+  border-radius: vars.$border-radius-card;
+  padding: vars.$padding-card;
 
-    @include vars.above(vars.$breakpoint) {
-      grid-template-columns: repeat(3, 1fr);
-    }
+  &__history-card {
+    width: 100%;
   }
 
-  .history-card {
-    width: 100%;                              
-    background-color: vars.$color-card-bg;
-    border: 1px solid vars.$color-card-border;
-    border-radius: vars.$border-radius-card;
-    padding: vars.$padding-card;
-    box-sizing: border-box;
+  .zipcode {
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+  }
 
-    span { font-weight: 600; }
+  .address-block {
+    padding: 0.5rem 0;
 
-    &__match {
-      padding: vars.$padding-item-vertical 0;
-    }
-
-    &__divider {
-      border-bottom: 1px solid vars.$color-card-border;
+    &.divider {
+      border-bottom: 1px solid #ccc;
     }
 
     p {
       margin: 0.25rem 0;
-      color: vars.$color-text-primary;
-      font-size: vars.$font-size-base;
+      font-size: 0.95rem;
+    }
+
+    span {
+      font-weight: bold;
     }
   }
 }
-</style>
 
+</style>

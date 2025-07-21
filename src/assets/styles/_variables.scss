@@ -19,6 +19,16 @@ $breakpoint:       768px;   // tablets
   }
 }
 
+:root {
+  --primary-color: #2563eb;
+  --danger-color: red;
+  --gray-100: #f3f4f6;
+  --gray-700: #374151;
+
+  //breakpoints
+  --breakpoint: $breakpoint;
+}
+
 
 // ────────────────────────────────────────
 // Colors

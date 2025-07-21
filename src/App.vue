@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import SearchForm from './components/SearchForm.vue'
 import SearchHistory from './components/SearchHistory.vue';
 import SearchResult from './components/SearchResult.vue';
 import { useSearchStore } from './stores/searchStore';
 
 const store = useSearchStore()
+
+const { isLoading } = storeToRefs(store)
 
 function onSearch(zipcode: string) {
   store.fetchZipcodeData(zipcode)
@@ -16,18 +19,23 @@ function onSearch(zipcode: string) {
   <div class="main-container">
     <div class="content-wrapper">
       <h1>住所検索</h1>
-      <div>
-        <p class="explanation-content">
+      <div class="explanation">
+        <p>
             郵便番号を入力して住所を検索できます。
             郵便番号はハイフン「-」有無どちらでも検索可能です。
         </p>
-        <p class="explanation-content">
+        <p>
           （00-0000、0000000 の形式で入力してください。）
         </p>
       </div>
       <SearchForm @search="onSearch"/>
-      <SearchResult/>
-      <SearchHistory/>
+      <div v-if="isLoading" class="loading">
+        <p>検索中です...</p>
+      </div>
+      <template v-else>
+        <SearchResult />
+        <SearchHistory />
+      </template>
     </div>
   </div>
 </template>
@@ -40,7 +48,6 @@ function onSearch(zipcode: string) {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
   padding: 2rem 1rem;
 
   .content-wrapper {
@@ -54,7 +61,7 @@ function onSearch(zipcode: string) {
       max-width: vars.$max-width;
     }
 
-    .explanation-content {
+    .explanation {
       text-align: center;
       color: vars.$color-text-secondary;
     }
